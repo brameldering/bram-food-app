@@ -11,9 +11,25 @@ const Cart = (props) => {
   const totalAmount = `$${cartContext.totalAmount.toFixed(2)}`;
   const hasItems = cartContext.items.length > 0;
 
-  const cartItemRemoveHandler = (id) => {};
+  const cartItemRemoveHandler = (id) => {
+    cartContext.removeItem(id);
+  };
 
-  const cartItemAddHandler = (item) => {};
+  const cartItemAddHandler = (item) => {
+    // const existingCartItemIndex = cartContext.items.findIndex(
+    //   (mealItem) => mealItem.id === item.id
+    // );
+    // const existingCartItem = cartContext.items[existingCartItemIndex];
+
+    // if (existingCartItem) {
+    //   const oneItem = {
+    //     ...existingCartItem,
+    //     amount: 1,
+    //   };
+    //   cartContext.addItem(oneItem);
+    // }
+    cartContext.addItem({ ...item, amount: 1 });
+  };
 
   const cartItems = (
     <ul className={classes["cart-items"]}>
