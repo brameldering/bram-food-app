@@ -19,15 +19,11 @@ const MealItem = (props) => {
   };
 
   return (
-    <li>
-      <div className={classes.meal}>
+    <li className={classes.meal}>
+      <div>
         <h3>{props.name}</h3>
-        <div className={classes.description}>
-          <p>{props.description}</p>
-        </div>
-        <div className={classes.price}>
-          <p>{price}</p>
-        </div>
+        <div className={classes.description}>{props.description}</div>
+        <div className={classes.price}>{price}</div>
       </div>
       <div>
         <MealItemForm onAddToCart={addToCartHandler} />
