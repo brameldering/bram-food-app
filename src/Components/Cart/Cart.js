@@ -26,6 +26,19 @@ const Cart = (props) => {
     setInCheckout(true);
   };
 
+  const saveOrderHandler = (userData) => {
+    console.log(userData);
+
+    fetch("https://food-app-d5a0a-default-rtdb.europe-west1.firebasedatabase.app/mealOrder.json", {
+      method: "POST",
+      headers: {},
+      body: JSON.stringify({
+        user: userData,
+        orderedItems: cartContext.items,
+      }),
+    });
+  };
+
   const cartItems = (
     <ul className={classes["cart-items"]}>
       {cartContext.items.map((item) => (
@@ -62,7 +75,7 @@ const Cart = (props) => {
       )}
       {inCheckout && (
         <div>
-          <Checkout onClose={props.onClose} />
+          <Checkout onClose={props.onClose} onSaveHandler={saveOrderHandler} />
         </div>
       )}
     </Modal>
