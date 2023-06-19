@@ -22,6 +22,10 @@ const Cart = (props) => {
     cartContext.addItem({ ...item, amount: 1 });
   };
 
+  const startCheckout = () => {
+    setInCheckout(true);
+  };
+
   const cartItems = (
     <ul className={classes["cart-items"]}>
       {cartContext.items.map((item) => (
@@ -36,10 +40,6 @@ const Cart = (props) => {
       ))}
     </ul>
   );
-
-  const startCheckout = () => {
-    setInCheckout(true);
-  };
 
   return (
     <Modal onBackgroundClick={props.onClose}>

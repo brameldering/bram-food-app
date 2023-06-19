@@ -58,11 +58,6 @@ const Checkout = (props) => {
   ] = useInput(fnPhoneIsValid);
 
   const formIsValid = firstnameIsValid && lastnameIsValid && emailIsValid && phoneIsValid;
-  console.log("firstnameIsValid: " + firstnameIsValid);
-  console.log("lastnameIsValid: " + lastnameIsValid);
-  console.log("emailIsValid: " + emailIsValid);
-  console.log("phoneIsValid: " + phoneIsValid);
-  console.log("formIsValid: " + formIsValid);
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -90,7 +85,7 @@ const Checkout = (props) => {
     };
 
     const applyOrderResponse = (orderResponse) => {
-      console.log("orderRespone");
+      console.log("orderResponse");
       console.log(orderResponse);
       console.log(orderResponse.name);
       setOrderId(orderResponse.name);
@@ -101,9 +96,11 @@ const Checkout = (props) => {
     };
 
     if (hasItems) {
-      saveOrder(requestConfigOrder, applyOrderResponse);
+      const returnedOrderId = saveOrder(requestConfigOrder, applyOrderResponse);
       console.log("orderId: " + orderId);
-
+      console.log("returnedOrderId: ");
+      console.log(returnedOrderId);
+      console.log("errorOrder: " + errorOrder);
       for (const item of cartContext.items) {
         let requestConfigOrderItem = {
           url: "https://food-app-d5a0a-default-rtdb.europe-west1.firebasedatabase.app/mealOrderItem.json",
@@ -119,6 +116,7 @@ const Checkout = (props) => {
         console.log("requestConfigOrderItem");
         console.log(requestConfigOrderItem);
         saveOrderItem(requestConfigOrderItem, applyOrderItemResponse);
+        console.log("errorItem: " + errorItem);
       }
 
       resetFirstname();
@@ -184,7 +182,7 @@ const Checkout = (props) => {
         </div>
       </div>
       <div className={classes.actions}>
-        <button className={classes["button--alt"]} onClick={props.onClose}>
+        <button type='button' className={classes["button--alt"]} onClick={props.onClose}>
           Close
         </button>
         <button className={classes.button} type='submit' disabled={!formIsValid}>
