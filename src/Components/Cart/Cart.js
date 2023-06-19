@@ -1,12 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import classes from "./Cart.module.css";
 import Modal from "../UI/Modal";
 import CartItem from "./CartItem";
 import CartContext from "../../store/cart-context";
+import Checkout from "./Checkout";
 
 const Cart = (props) => {
+  console.log("start Cart");
   const cartContext = useContext(CartContext);
+  const [inCheckout, setInCheckout] = useState(false);
 
   const totalAmount = `$${cartContext.totalAmount.toFixed(2)}`;
   const hasItems = cartContext.items.length > 0;
@@ -16,18 +19,6 @@ const Cart = (props) => {
   };
 
   const cartItemAddHandler = (item) => {
-    // const existingCartItemIndex = cartContext.items.findIndex(
-    //   (mealItem) => mealItem.id === item.id
-    // );
-    // const existingCartItem = cartContext.items[existingCartItemIndex];
-
-    // if (existingCartItem) {
-    //   const oneItem = {
-    //     ...existingCartItem,
-    //     amount: 1,
-    //   };
-    //   cartContext.addItem(oneItem);
-    // }
     cartContext.addItem({ ...item, amount: 1 });
   };
 
@@ -46,19 +37,34 @@ const Cart = (props) => {
     </ul>
   );
 
+  const startCheckout = () => {
+    setInCheckout(true);
+  };
+
   return (
     <Modal onBackgroundClick={props.onClose}>
       {cartItems}
       <div className={classes.total}>
-        <span>Total Amount</span>
-        <span>{totalAmount}</span>
+        <span>Total Amount:</span>
+        <span className={classes.amount}>{totalAmount}</span>
       </div>
-      <div className={classes.actions}>
-        <button className={classes["button--alt"]} onClick={props.onClose}>
-          Close
-        </button>
-        {hasItems && <button className={classes.button}>Order</button>}
-      </div>
+      {!inCheckout && (
+        <div className={classes.actions}>
+          <button className={classes["button--alt"]} onClick={props.onClose}>
+            Close
+          </button>
+          {hasItems && (
+            <button className={classes.button} onClick={startCheckout}>
+              Order
+            </button>
+          )}
+        </div>
+      )}
+      {inCheckout && (
+        <div>
+          <Checkout onClose={props.onClose} />
+        </div>
+      )}
     </Modal>
   );
 };

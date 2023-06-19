@@ -8,6 +8,7 @@ const defaultCartState = {
 };
 
 const cartReducer = (state, action) => {
+  console.log("STart cartReducer");
   if (action.type === "ADD") {
     const updatedTotalAmount = state.totalAmount + action.item.price * action.item.amount;
 
@@ -60,6 +61,7 @@ const cartReducer = (state, action) => {
 };
 
 const CartProvider = (props) => {
+  console.log("STart CartProvider");
   const [cartState, dispatchCartAction] = useReducer(cartReducer, defaultCartState);
 
   const addItemToCartHandler = (item) => {

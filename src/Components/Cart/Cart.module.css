@@ -1,18 +1,22 @@
 .cart-items {
   list-style: none;
+  max-height: 30rem;
   margin: 0;
   padding: 0;
-  max-height: 20rem;
   overflow: auto;
 }
 
 .total {
   display: flex;
-  justify-content: space-between;
+  justify-content: right;
   align-items: center;
+  margin: 0.5rem 0.5rem;
   font-weight: bold;
-  font-size: 1.5rem;
-  margin: 1rem 0;
+  font-size: 1.25rem;
+}
+
+.amount {
+  margin-left: 2rem;
 }
 
 .actions {
@@ -20,19 +24,20 @@
 }
 
 .actions button {
+  margin-top: 1rem;
+  margin-left: 1rem;
+  padding: 0.5rem 2rem;
+  border: 1px solid #8a2b06;
+  border-radius: 25px;
+  background-color: transparent;
   font: inherit;
   cursor: pointer;
-  background-color: transparent;
-  border: 1px solid #8a2b06;
-  padding: 0.5rem 2rem;
-  border-radius: 25px;
-  margin-left: 1rem;
 }
 
 .actions button:hover,
 .actions button:active {
-  background-color: #5a1a01;
   border-color: #5a1a01;
+  background-color: #5a1a01;
   color: white;
 }
 

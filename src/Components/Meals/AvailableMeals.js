@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import useHttp from "../../hooks/use-http";
 
 import Card from "../UI/Card";
-// import { DUMMY_MEALS } from "./dummy-meals";
 import MealItem from "./MealItem/MealItem";
 
 import classes from "./AvailableMeals.module.css";
@@ -15,8 +14,6 @@ const AvailableMeals = () => {
     const loadMeals = (mealObj) => {
       const loadedMeals = [];
       for (const mealKey in mealObj) {
-        console.log(mealObj);
-        console.log(mealKey);
         loadedMeals.push({
           id: mealKey,
           name: mealObj[mealKey].name,
@@ -44,7 +41,9 @@ const AvailableMeals = () => {
   return (
     <section className={classes.meals}>
       <Card>
-        <ul>{mealsList}</ul>
+        {isLoading && <p>Loading ...</p>}
+        {error && <p>An error occurred: {error}</p>}
+        {!isLoading && !error && <ul>{mealsList}</ul>}
       </Card>
     </section>
   );
