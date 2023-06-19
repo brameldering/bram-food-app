@@ -1,4 +1,4 @@
-import React, { useContext, useCallback } from "react";
+import React, { useContext, useState } from "react";
 
 import classes from "./Checkout.module.css";
 import useInput from "../../hooks/use-input";
@@ -9,7 +9,9 @@ import CartContext from "../../store/cart-context";
 const Checkout = (props) => {
   console.log("start checkout");
   const cartContext = useContext(CartContext);
-  const { isLoading, error, sendRequest: saveOrder } = useHttp();
+  const { isSavingOrder, errorOrder, sendRequest: saveOrder } = useHttp();
+  const { isSavingOrderItem, errorItem, sendRequest: saveOrderItem } = useHttp();
+  const [orderId, setOrderId] = useState("");
 
   const fnValueIsNotEmpty = (value) => /\S/.test(value);
 
@@ -87,30 +89,43 @@ const Checkout = (props) => {
       },
     };
 
-    const applyOrderResponse = (orderRespone) => {
+    const applyOrderResponse = (orderResponse) => {
       console.log("orderRespone");
-      console.log(orderRespone);
+      console.log(orderResponse);
+      console.log(orderResponse.name);
+      setOrderId(orderResponse.name);
     };
+    const applyOrderItemResponse = (orderItemResponse) => {
+      console.log("orderItemResponse");
+      console.log(orderItemResponse);
+    };
+
     if (hasItems) {
       saveOrder(requestConfigOrder, applyOrderResponse);
+      console.log("orderId: " + orderId);
+
+      for (const item of cartContext.items) {
+        let requestConfigOrderItem = {
+          url: "https://food-app-d5a0a-default-rtdb.europe-west1.firebasedatabase.app/mealOrderItem.json",
+          method: "POST",
+          headers: {},
+          body: {
+            orderId: orderId,
+            productName: item.name,
+            numberOfItems: item.amount,
+            priceOfItem: item.price,
+          },
+        };
+        console.log("requestConfigOrderItem");
+        console.log(requestConfigOrderItem);
+        saveOrderItem(requestConfigOrderItem, applyOrderItemResponse);
+      }
+
+      resetFirstname();
+      resetLastname();
+      resetEmail();
+      resetPhone();
     }
-
-    const saveOrderItems = () => {};
-    // if (hasItems) (saveOrderItems (requestConfigOrderItems, applyOrderItemsResponse)} => {
-    //   {cartContext.items.map((item) => (
-
-    //       key={item.id}
-    //       name={item.name}
-    //       amount={item.amount}
-    //       price={item.price}
-    //     />
-    //   ))}
-    // }
-
-    resetFirstname();
-    resetLastname();
-    resetEmail();
-    resetPhone();
   };
 
   const firstnameClass = `${classes.control} ${firstnameHasError && classes.invalid}`;
@@ -173,10 +188,12 @@ const Checkout = (props) => {
           Close
         </button>
         <button className={classes.button} type='submit' disabled={!formIsValid}>
-          {isLoading ? "Saving..." : "Submit"}
+          {isSavingOrder || isSavingOrderItem ? "Saving..." : "Submit"}
         </button>
       </div>
-      {error && <div className={classes["error-text"]}>An error occurred: {error}</div>}
+      {(errorOrder || errorItem) && (
+        <div className={classes["error-text"]}>An error occurred: {errorOrder || errorItem}</div>
+      )}
     </form>
   );
 };
