@@ -11,7 +11,6 @@ const Checkout = (props) => {
   const cartContext = useContext(CartContext);
   const { isSavingOrder, errorOrder, sendRequest: saveOrder } = useHttp();
   const { isSavingOrderItem, errorItem, sendRequest: saveOrderItem } = useHttp();
-  const [orderId, setOrderId] = useState("");
 
   const fnValueIsNotEmpty = (value) => /\S/.test(value);
 
@@ -59,10 +58,8 @@ const Checkout = (props) => {
 
   const formIsValid = firstnameIsValid && lastnameIsValid && emailIsValid && phoneIsValid;
 
-  const submitHandler = (event) => {
-    event.preventDefault();
-    console.log(firstnameValue + " - " + lastnameValue + " - " + emailValue + " - " + phoneValue);
-
+  const postOrder = async () => {
+    console.log("1 - start postOrder");
     const totalAmount = `${cartContext.totalAmount.toFixed(2)}`;
     const nrOfCartItems = cartContext.items.reduce((curNumber, item) => {
       return curNumber + item.amount;
@@ -70,60 +67,79 @@ const Checkout = (props) => {
     const hasItems = nrOfCartItems > 0;
     console.log("totalAmount: " + totalAmount + " - nrOfCartItems: " + nrOfCartItems);
 
-    const requestConfigOrder = {
-      url: "https://food-app-d5a0a-default-rtdb.europe-west1.firebasedatabase.app/mealOrder.json",
-      method: "POST",
-      headers: {},
-      body: {
-        firstname: { firstnameValue },
-        lastname: { lastnameValue },
-        email: { emailValue },
-        phone: { phoneValue },
-        numberOfItems: { nrOfCartItems },
-        totalAmount: { totalAmount },
-      },
-    };
+    try {
+      const requestConfigOrder = {
+        url: "https://food-app-d5a0a-default-rtdb.europe-west1.firebasedatabase.app/mealOrder.json",
+        method: "POST",
+        headers: {},
+        body: {
+          firstname: { firstnameValue },
+          lastname: { lastnameValue },
+          email: { emailValue },
+          phone: { phoneValue },
+          numberOfItems: { nrOfCartItems },
+          totalAmount: { totalAmount },
+        },
+      };
 
-    const applyOrderResponse = (orderResponse) => {
-      console.log("orderResponse");
-      console.log(orderResponse);
-      console.log(orderResponse.name);
-      setOrderId(orderResponse.name);
-    };
-    const applyOrderItemResponse = (orderItemResponse) => {
-      console.log("orderItemResponse");
-      console.log(orderItemResponse);
-    };
+      const applyOrderResponse = (orderResponse) => {
+        console.log("orderResponse.name");
+        console.log(orderResponse.name);
+      };
+      const applyOrderItemResponse = (orderItemResponse) => {
+        console.log("orderItemResponse");
+        console.log(orderItemResponse);
+      };
 
-    if (hasItems) {
-      const returnedOrderId = saveOrder(requestConfigOrder, applyOrderResponse);
-      console.log("orderId: " + orderId);
-      console.log("returnedOrderId: ");
-      console.log(returnedOrderId);
-      console.log("errorOrder: " + errorOrder);
-      for (const item of cartContext.items) {
-        let requestConfigOrderItem = {
-          url: "https://food-app-d5a0a-default-rtdb.europe-west1.firebasedatabase.app/mealOrderItem.json",
-          method: "POST",
-          headers: {},
-          body: {
-            orderId: orderId,
-            productName: item.name,
-            numberOfItems: item.amount,
-            priceOfItem: item.price,
-          },
-        };
-        console.log("requestConfigOrderItem");
-        console.log(requestConfigOrderItem);
-        saveOrderItem(requestConfigOrderItem, applyOrderItemResponse);
-        console.log("errorItem: " + errorItem);
+      if (hasItems) {
+        const returnedOrderId = await saveOrder(requestConfigOrder, applyOrderResponse);
+        console.log("returnedOrderId: ");
+        console.log(returnedOrderId);
+        console.log("errorOrder: " + errorOrder);
+        for (const item of cartContext.items) {
+          let requestConfigOrderItem = {
+            url: "https://food-app-d5a0a-default-rtdb.europe-west1.firebasedatabase.app/mealOrderItem.json",
+            method: "POST",
+            headers: {},
+            body: {
+              orderId: returnedOrderId,
+              productName: item.name,
+              numberOfItems: item.amount,
+              priceOfItem: item.price,
+            },
+          };
+          console.log("requestConfigOrderItem");
+          console.log(requestConfigOrderItem);
+          saveOrderItem(requestConfigOrderItem, applyOrderItemResponse);
+          console.log("errorItem: " + errorItem);
+        }
       }
-
-      resetFirstname();
-      resetLastname();
-      resetEmail();
-      resetPhone();
+    } catch (error) {
+      console.log("ERROR from post userData " + error);
+      throw error;
     }
+  };
+  const submitHandler = (event) => {
+    console.log("submitHandler - START");
+    event.preventDefault();
+    // console.log(firstnameValue + " - " + lastnameValue + " - " + emailValue + " - " + phoneValue);
+
+    (async () => {
+      try {
+        console.log("calling postOrder");
+        const x = await postOrder();
+        console.log(x);
+        console.log("after calling postOrder");
+      } catch (err) {
+        console.log("error from postOrder " + err);
+      }
+    })();
+
+    resetFirstname();
+    resetLastname();
+    resetEmail();
+    resetPhone();
+    console.log("submitHandler - END");
   };
 
   const firstnameClass = `${classes.control} ${firstnameHasError && classes.invalid}`;
