@@ -27,6 +27,7 @@ const Cart = (props) => {
   };
 
   const saveOrderHandler = (userData) => {
+    console.log("saveOrderHandler - START");
     console.log(userData);
 
     fetch("https://food-app-d5a0a-default-rtdb.europe-west1.firebasedatabase.app/mealOrder.json", {
@@ -37,6 +38,7 @@ const Cart = (props) => {
         orderedItems: cartContext.items,
       }),
     });
+    console.log("saveOrderHandler - END");
   };
 
   const cartItems = (

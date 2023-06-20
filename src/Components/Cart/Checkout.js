@@ -4,7 +4,7 @@ import classes from "./Checkout.module.css";
 import useInput from "../../hooks/use-input";
 
 const Checkout = (props) => {
-  console.log("start checkout");
+  console.log("Checkout - START");
   const fnValueIsNotEmpty = (value) => /\S/.test(value);
   const fnEmailIsValid = (value) =>
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
@@ -70,6 +70,8 @@ const Checkout = (props) => {
   const lastnameClass = `${classes.control} ${lastnameHasError && classes.invalid}`;
   const emailClass = `${classes.control} ${emailHasError && classes.invalid}`;
   const phoneClass = `${classes.control} ${phoneHasError && classes.invalid}`;
+
+  console.log("Checkout - END");
 
   return (
     <form className={classes.form} onSubmit={submitHandler}>
