@@ -1,5 +1,4 @@
-import React, { useContext, useState } from "react";
-
+import React from "react";
 import classes from "./Checkout.module.css";
 import useInput from "../../hooks/use-input";
 
@@ -128,13 +127,9 @@ const Checkout = (props) => {
           Close
         </button>
         <button className={classes.button} type='submit' disabled={!formIsValid}>
-          Submit
-          {/* {isSavingOrder || isSavingOrderItem ? "Saving..." : "Submit"} */}
+          {props.isSubmitting ? "Saving..." : "Submit"}
         </button>
       </div>
-      {/* {(errorOrder || errorItem) && (
-        <div className={classes["error-text"]}>An error occurred: {errorOrder || errorItem}</div>
-      )} */}
     </form>
   );
 };
