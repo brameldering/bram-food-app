@@ -67,7 +67,6 @@ const Checkout = (props) => {
     }, 0);
     const hasItems = nrOfCartItems > 0;
     console.log("totalAmount: " + totalAmount + " - nrOfCartItems: " + nrOfCartItems);
-    let returnedOrderId = null;
     try {
       const requestConfigOrder = {
         url: "https://food-app-d5a0a-default-rtdb.europe-west1.firebasedatabase.app/mealOrder.json",
