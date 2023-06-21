@@ -82,3 +82,7 @@ button:disabled:active {
   text-align: right;
   color: #ca3e51;
 }
+.info-text {
+  margin-top: 1rem;
+  text-align: right;
+}

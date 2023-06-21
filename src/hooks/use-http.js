@@ -23,7 +23,7 @@ const useHttp = () => {
       setIsLoading(false);
       return data.name; // return the key
     } catch (err) {
-      console.log(err.message || "Something went wrong!");
+      console.log("ERROR SENDING REQUEST " + err.message || "Something went wrong!");
       setError(err.message || "Something went wrong!");
       setIsLoading(false);
       return null;
